@@ -2,47 +2,41 @@
 
 namespace CT.Common.Logging
 {
-    public class Log4NetLogger : CT.Common.Logging.Interfaces.ILogger
+    public class Log4NetLogger : Interfaces.ILogger
     {
-        private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private log4net.Repository.ILoggerRepository repo = log4net.LogManager.GetRepository();
+        private readonly log4net.ILog _logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly log4net.Repository.ILoggerRepository _repo = log4net.LogManager.GetRepository();
 
         public Log4NetLogger()
         {
             log4net.Config.XmlConfigurator.Configure();
         }
 
-        public string LogFilePath
-        {
-            get
-            {            
-                return repo.GetAppenders().OfType<log4net.Appender.RollingFileAppender>().Where(fa => fa.Name == "FileAppender").Single().File;
-            }
-        }
+        public string LogFilePath => _repo.GetAppenders().OfType<log4net.Appender.RollingFileAppender>().Single(fa => fa.Name == "FileAppender").File;
 
         public void Fatal(string message)
         {
-            logger.Fatal(message);
+            _logger.Fatal(message);
         }
 
         public void Error(string message)
         {
-            logger.Error(message);
+            _logger.Error(message);
         }
 
         public void Warn(string message)
         {
-            logger.Warn(message);
+            _logger.Warn(message);
         }
 
         public void Info(string message)
         {
-            logger.Info(message);
+            _logger.Info(message);
         }
 
         public void Debug(string message)
         {
-            logger.Debug(message);
+            _logger.Debug(message);
         }
 
         public void Shutdown()
@@ -55,19 +49,19 @@ namespace CT.Common.Logging
             switch (logLevel)
             {
                 case LogLevel.Fatal:
-                    logger.Fatal(message);
+                    _logger.Fatal(message);
                     break;
                 case LogLevel.Error:
-                    logger.Error(message);
+                    _logger.Error(message);
                     break;
                 case LogLevel.Warn:
-                    logger.Warn(message);
+                    _logger.Warn(message);
                     break;
                 case LogLevel.Info:
-                    logger.Info(message);
+                    _logger.Info(message);
                     break;
                 case LogLevel.Debug:
-                    logger.Debug(message);
+                    _logger.Debug(message);
                     break;
             }
         }

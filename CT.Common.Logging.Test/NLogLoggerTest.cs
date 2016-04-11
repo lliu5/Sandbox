@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.IO;
 using NLog;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -21,7 +20,7 @@ namespace CT.Common.Logging.Test
             {
                 config = LogManager.Configuration;
             }
-            catch (Exception ex)
+            catch
             {
                 Assert.Fail("Error");
             }
@@ -70,16 +69,16 @@ namespace CT.Common.Logging.Test
                 File.Delete(filePath);
 
             string message = "This is Test Message";
-            NLog.Logger logger = LogManager.GetCurrentClassLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+            Logger logger = LogManager.GetCurrentClassLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
             logger.Error(message);
-            NLog.LogManager.Shutdown();
+            LogManager.Shutdown();
             Assert.IsTrue(File.ReadAllText(filePath).Contains(message));
         }
 
         [TestMethod]
         public void WriteToFileTest()
         {
-            CT.Common.Logging.NLogger logger = new CT.Common.Logging.NLogger();
+            NLogger logger = new NLogger();
 
             string filePath = logger.LogFilePath;
             if (File.Exists(filePath))
@@ -94,7 +93,7 @@ namespace CT.Common.Logging.Test
         [TestMethod]
         public void WriteToConsoleTest()
         {
-            CT.Common.Logging.NLogger logger = new CT.Common.Logging.NLogger();
+            NLogger logger = new NLogger();
 
             logger.Fatal("Fatal message");
             logger.Error("Error message");

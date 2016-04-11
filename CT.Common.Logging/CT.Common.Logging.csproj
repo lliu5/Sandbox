@@ -77,14 +77,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DependencyFactory.cs" />
     <Compile Include="Interfaces\ILogger.cs" />
     <Compile Include="Log4NetLogger.cs" />
     <Compile Include="LogLevel.cs" />
     <Compile Include="MSLogger.cs" />
     <Compile Include="NLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UnityConfig.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

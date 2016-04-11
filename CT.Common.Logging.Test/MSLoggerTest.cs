@@ -1,20 +1,17 @@
-﻿using System;
-using System.Linq;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
 using Microsoft.Practices.EnterpriseLibrary.Logging;
 using Microsoft.Practices.EnterpriseLibrary.Logging.Configuration;
-using Microsoft.Practices.EnterpriseLibrary.Logging.TraceListeners;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CT.Common.Logging.Test
 {
     [TestClass]
-    public class MSLoggerTest
+    public class MsLoggerTest
     {
         /// <summary>
-        /// Need to add <section name="loggingConfiguration" ...></section> in config file
-        /// Or missing <specialSources>
+        /// Need to add "section" in config file
+        /// Or missing "specialSources"
         /// </summary>
         [TestMethod]
         public void ConfigExistsTest()
@@ -24,7 +21,7 @@ namespace CT.Common.Logging.Test
             {
                 msConfig = LoggingSettings.GetLoggingSettings(new Microsoft.Practices.EnterpriseLibrary.Common.Configuration.SystemConfigurationSource());
             }
-            catch (Exception ex)
+            catch
             {
                 Assert.Fail("Error");
             }
@@ -32,7 +29,7 @@ namespace CT.Common.Logging.Test
         }
 
         /// <summary>
-        /// Need to add <listeners> in config file
+        /// Need to add "listeners" in config file
         /// </summary>
         [TestMethod]
         public void ConfigListenerExistsTest()
@@ -56,7 +53,7 @@ namespace CT.Common.Logging.Test
         [TestMethod]
         public void ConfigConsoleAppenderExistsTest()
         {
-            Assert.IsTrue(LoggingSettings.GetLoggingSettings(new Microsoft.Practices.EnterpriseLibrary.Common.Configuration.SystemConfigurationSource()).TraceListeners.Get("System Diagnostics Trace Listener").Type == typeof(System.Diagnostics.ConsoleTraceListener));
+            Assert.IsTrue(LoggingSettings.GetLoggingSettings(new Microsoft.Practices.EnterpriseLibrary.Common.Configuration.SystemConfigurationSource()).TraceListeners.Get("System Diagnostics Trace Listener").Type == typeof(ConsoleTraceListener));
         }
 
 
@@ -68,7 +65,7 @@ namespace CT.Common.Logging.Test
         {
 
             RollingFlatFileTraceListenerData fileTraceListener = LoggingSettings.GetLoggingSettings(new Microsoft.Practices.EnterpriseLibrary.Common.Configuration.SystemConfigurationSource()).TraceListeners.Get("Rolling Flat File Trace Listener") as RollingFlatFileTraceListenerData;
-            string filePath = fileTraceListener.FileName;
+            string filePath = fileTraceListener == null ? string.Empty : fileTraceListener.FileName;
             if (File.Exists(filePath))
                 File.Delete(filePath);
 
@@ -84,7 +81,7 @@ namespace CT.Common.Logging.Test
         [TestMethod]
         public void WriteToFileTest()
         {
-            CT.Common.Logging.MSLogger logger = new CT.Common.Logging.MSLogger();
+            MsLogger logger = new MsLogger();
 
             string filePath = logger.LogFilePath;
             if (File.Exists(filePath))
@@ -99,7 +96,7 @@ namespace CT.Common.Logging.Test
         [TestMethod]
         public void WriteToConsoleTest()
         {
-            CT.Common.Logging.MSLogger logger = new CT.Common.Logging.MSLogger();
+            MsLogger logger = new MsLogger();
 
             logger.Fatal("Fatal message");
             logger.Error("Error message");

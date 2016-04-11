@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace CT.Common.Logging.Interfaces
+﻿namespace CT.Common.Logging.Interfaces
 {
     interface ILogger
     {
@@ -18,6 +16,6 @@ namespace CT.Common.Logging.Interfaces
 
         void Shutdown();
 
-        void Log(string message, LogLevel LogLevel);
+        void Log(string message, LogLevel logLevel);
     }
 }

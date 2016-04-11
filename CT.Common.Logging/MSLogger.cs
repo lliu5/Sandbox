@@ -1,15 +1,18 @@
 ﻿using System.Diagnostics;
+using CT.Common.Logging.Interfaces;
+using Microsoft.Practices.EnterpriseLibrary.Common.Configuration;
 using Microsoft.Practices.EnterpriseLibrary.Logging;
 using Microsoft.Practices.EnterpriseLibrary.Logging.Configuration;
 
 namespace CT.Common.Logging
 {
-    public class MSLogger : CT.Common.Logging.Interfaces.ILogger
+    public class MsLogger : ILogger
     {
-        LogEntry logEntry;
-        public MSLogger ()
+        private readonly LogEntry _logEntry;
+
+        public MsLogger()
         {
-            logEntry = new LogEntry();
+            _logEntry = new LogEntry();
             Logger.SetLogWriter(new LogWriterFactory().Create());
         }
 
@@ -17,44 +20,46 @@ namespace CT.Common.Logging
         {
             get
             {
-                RollingFlatFileTraceListenerData fileTraceListener = LoggingSettings.GetLoggingSettings(new Microsoft.Practices.EnterpriseLibrary.Common.Configuration.SystemConfigurationSource()).TraceListeners.Get("Rolling Flat File Trace Listener") as RollingFlatFileTraceListenerData;
-                return fileTraceListener.FileName;
+                var fileTraceListener =
+                    LoggingSettings.GetLoggingSettings(new SystemConfigurationSource())
+                        .TraceListeners.Get("Rolling Flat File Trace Listener") as RollingFlatFileTraceListenerData;
+                return fileTraceListener == null ? string.Empty : fileTraceListener.FileName;
             }
         }
 
         public void Fatal(string message)
         {
-            logEntry.Message = message;
-            logEntry.Severity = TraceEventType.Critical;
-            Logger.Write(logEntry);
+            _logEntry.Message = message;
+            _logEntry.Severity = TraceEventType.Critical;
+            Logger.Write(_logEntry);
         }
 
         public void Error(string message)
         {
-            logEntry.Message = message;
-            logEntry.Severity = TraceEventType.Error;
-            Logger.Write(logEntry);
+            _logEntry.Message = message;
+            _logEntry.Severity = TraceEventType.Error;
+            Logger.Write(_logEntry);
         }
 
         public void Warn(string message)
         {
-            logEntry.Message = message;
-            logEntry.Severity = TraceEventType.Warning;
-            Logger.Write(logEntry);
+            _logEntry.Message = message;
+            _logEntry.Severity = TraceEventType.Warning;
+            Logger.Write(_logEntry);
         }
 
-        public void Info(string message) 
+        public void Info(string message)
         {
-            logEntry.Message = message;
-            logEntry.Severity = TraceEventType.Information;
-            Logger.Write(logEntry);
+            _logEntry.Message = message;
+            _logEntry.Severity = TraceEventType.Information;
+            Logger.Write(_logEntry);
         }
 
         public void Debug(string message)
         {
-            logEntry.Message = message;
-            logEntry.Severity = TraceEventType.Verbose;
-            Logger.Write(logEntry);
+            _logEntry.Message = message;
+            _logEntry.Severity = TraceEventType.Verbose;
+            Logger.Write(_logEntry);
         }
 
         public void Shutdown()
@@ -62,28 +67,28 @@ namespace CT.Common.Logging
             Logger.Reset();
         }
 
-        public void Log (string message, LogLevel logLevel)
+        public void Log(string message, LogLevel logLevel)
         {
-            logEntry.Message = message;
+            _logEntry.Message = message;
             switch (logLevel)
             {
                 case LogLevel.Fatal:
-                    logEntry.Severity = TraceEventType.Critical;
+                    _logEntry.Severity = TraceEventType.Critical;
                     break;
                 case LogLevel.Error:
-                    logEntry.Severity = TraceEventType.Error;
+                    _logEntry.Severity = TraceEventType.Error;
                     break;
                 case LogLevel.Warn:
-                    logEntry.Severity = TraceEventType.Warning;
+                    _logEntry.Severity = TraceEventType.Warning;
                     break;
                 case LogLevel.Info:
-                    logEntry.Severity = TraceEventType.Information;
+                    _logEntry.Severity = TraceEventType.Information;
                     break;
                 case LogLevel.Debug:
-                    logEntry.Severity = TraceEventType.Verbose;
+                    _logEntry.Severity = TraceEventType.Verbose;
                     break;
             }
-            Logger.Write(logEntry);
+            Logger.Write(_logEntry);
         }
     }
 }

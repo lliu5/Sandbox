@@ -3,45 +3,36 @@ using NLog;
 
 namespace CT.Common.Logging
 {    
-    public class NLogger : CT.Common.Logging.Interfaces.ILogger
+    public class NLogger : Interfaces.ILogger
     {
-        private static NLog.Logger logger = LogManager.GetCurrentClassLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly Logger _logger = LogManager.GetCurrentClassLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        public NLogger ()
-        {           
-        }
-
-        public string LogFilePath
-        {
-            get
-            {
-                return Path.GetFullPath(LogManager.Configuration.FindTargetByName<NLog.Targets.FileTarget>("logfile").FileName.Render(new LogEventInfo()));
-            }
-        }
+        public string LogFilePath =>
+            Path.GetFullPath(LogManager.Configuration.FindTargetByName<NLog.Targets.FileTarget>("logfile").FileName.Render(new LogEventInfo()));
 
         public void Fatal(string message)
         {
-            logger.Fatal(message);
+            _logger.Fatal(message);
         }
 
         public void Error(string message)
         {
-            logger.Error(message);
+            _logger.Error(message);
         }
 
         public void Warn(string message)
         {
-            logger.Warn(message);
+            _logger.Warn(message);
         }
 
         public void Info(string message)
         {
-            logger.Info(message);
+            _logger.Info(message);
         }
 
         public void Debug(string message)
         {
-            logger.Debug(message);
+            _logger.Debug(message);
         }
 
         public void Shutdown()
@@ -53,19 +44,19 @@ namespace CT.Common.Logging
             switch (logLevel)
             {
                 case LogLevel.Fatal:
-                    logger.Fatal(message);
+                    _logger.Fatal(message);
                     break;
                 case LogLevel.Error:
-                    logger.Error(message);
+                    _logger.Error(message);
                     break;
                 case LogLevel.Warn:
-                    logger.Warn(message);
+                    _logger.Warn(message);
                     break;
                 case LogLevel.Info:
-                    logger.Info(message);
+                    _logger.Info(message);
                     break;
                 case LogLevel.Debug:
-                    logger.Debug(message);
+                    _logger.Debug(message);
                     break;
             }
         }

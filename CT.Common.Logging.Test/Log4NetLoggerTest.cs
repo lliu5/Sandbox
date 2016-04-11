@@ -8,7 +8,7 @@ namespace CT.Common.Logging.Test
     public class Log4NetLoggerTest
     {
         /// <summary>
-        /// Need to add <section name="log4net" type="log4net.Config.Log4NetConfigurationSectionHandler, log4net" /> in config file
+        /// Need to add "section" in config file
         /// </summary>
         [TestMethod]
         public void ConfigExistsTest()
@@ -19,14 +19,14 @@ namespace CT.Common.Logging.Test
         }
 
         /// <summary>
-        /// Need to add <root> and <appender></appender> in config file
+        /// Need to add "root" and "appender" in config file
         /// </summary>
         [TestMethod]
         public void ConfigAppenderExistsTest()
         {
             log4net.Config.XmlConfigurator.Configure();
             log4net.Repository.ILoggerRepository repo = log4net.LogManager.GetRepository();
-            Assert.IsFalse(repo.GetAppenders().Count() == 0);
+            Assert.IsTrue(repo.GetAppenders().Any());
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace CT.Common.Logging.Test
         {
             log4net.Config.XmlConfigurator.Configure();
             log4net.Repository.ILoggerRepository repo = log4net.LogManager.GetRepository();
-            Assert.IsFalse(repo.GetAppenders().OfType<log4net.Appender.FileAppender>().Count() == 0);
+            Assert.IsTrue(repo.GetAppenders().OfType<log4net.Appender.FileAppender>().Any());
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace CT.Common.Logging.Test
         {
             log4net.Config.XmlConfigurator.Configure();
             log4net.Repository.ILoggerRepository repo = log4net.LogManager.GetRepository();
-            Assert.IsFalse(repo.GetAppenders().OfType<log4net.Appender.ColoredConsoleAppender>().Count() == 0);
+            Assert.IsTrue(repo.GetAppenders().OfType<log4net.Appender.ColoredConsoleAppender>().Any());
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace CT.Common.Logging.Test
             log4net.Config.XmlConfigurator.Configure();
             log4net.Repository.ILoggerRepository repo = log4net.LogManager.GetRepository();
             log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-            string filePath = repo.GetAppenders().OfType<log4net.Appender.RollingFileAppender>().Where(fa => fa.Name == "FileAppender").Single().File;
+            string filePath = repo.GetAppenders().OfType<log4net.Appender.RollingFileAppender>().Single(fa => fa.Name == "FileAppender").File;
             if (File.Exists(filePath))
                 File.Delete(filePath);
 
@@ -74,7 +74,7 @@ namespace CT.Common.Logging.Test
         [TestMethod]
         public void WriteToFileTest()
         {
-            CT.Common.Logging.Log4NetLogger logger = new Log4NetLogger();
+            Log4NetLogger logger = new Log4NetLogger();
 
             string filePath = logger.LogFilePath;
             if (File.Exists(filePath))
@@ -89,7 +89,7 @@ namespace CT.Common.Logging.Test
         [TestMethod]
         public void WriteToConsoleTest()
         {
-            CT.Common.Logging.Log4NetLogger logger = new Log4NetLogger();
+            Log4NetLogger logger = new Log4NetLogger();
 
             logger.Fatal("Fatal message");
             logger.Error("Error message");
